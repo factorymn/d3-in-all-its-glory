@@ -1,0 +1,81 @@
+body {
+  -webkit-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+  font: 10px Arial;
+}
+
+.actions {
+  display: flex;
+  width: 732px;
+  justify-content: space-between;
+}
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  stroke-opacity: 0.3;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.region-hover {
+  stroke: #000;
+  stroke-width: 4px;
+}
+
+.voronoi path {
+  fill: none;
+  pointer-events: all;
+}
+
+.voronoi-show path {
+  stroke: red;
+  stroke-opacity: 0.2;
+}
+
+.root {
+  display: flex;
+}
+
+//.legend {
+//  margin-top: 20px;
+//}
+
+.legend-item {
+  cursor: pointer;
+}
+
+.extra-options-container {
+  font-size: 12px;
+  margin-top: 5px;
+  display: flex;
+  width: 145px;
+  justify-content: space-between;
+  margin-left: 50px
+}
+
+.hide-all-option, .show-all-option {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.hide-all-option:hover, .show-all-option:hover {
+  text-decoration: none;
+}
+
+.legend-text, .legend-value {
+  font-size: 12px;
+}
+
+.dot {
+  stroke-width: 1px;
+  stroke: white;
+}
