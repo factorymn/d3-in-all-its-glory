@@ -1,9 +1,9 @@
-import drawFunction from './stepTwo';
+import drawFunction from './stepThree';
 
 drawFunction();
 
-module.hot.accept('./stepTwo', () => {
-  const newDrawFunction = require('./stepTwo').default;
+module.hot.accept('./stepThree', () => {
+  const newDrawFunction = require('./stepThree').default;
 
   document.getElementsByClassName('legend')[0].innerHTML = '';
   document.getElementsByClassName('chart')[0].innerHTML = '';
