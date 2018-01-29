@@ -21,8 +21,8 @@ const data = d3.csvParse(dataAsStringRu, d => d);
 
 export default function draw() {
   const margin = { top: 20, right: 20, bottom: 50, left: 50 };
-  const width = 750 - margin.left - margin.right;
-  const height = 415 - margin.top - margin.bottom;
+  const width = 920 - margin.left - margin.right;
+  const height = 360 - margin.top - margin.bottom;
 
   const x = d3.scaleTime()
     .range([0, width]);
@@ -73,22 +73,6 @@ export default function draw() {
 
   svg.append('g')
     .call(d3.axisLeft(y).ticks(0));
-
-  svg.append('text')
-    .attr('transform', `translate(${ width / 2 },${ height + margin.top + 20 })`)
-    .style('font-size', '12px')
-    .style('font-family', 'sans-serif')
-    .style('text-anchor', 'middle')
-    .text('Дата');
-
-  svg.append('text')
-    .attr('transform', 'rotate(-90)')
-    .attr('y', 0 - margin.left / 1.2)
-    .attr('x', 0 - (height / 2))
-    .attr('dy', '1em')
-    .style('font-size', '12px')
-    .style('text-anchor', 'middle')
-    .text('Процентная ставка');
 
   const nestByRegionId = d3.nest()
     .key(d => d.regionId)
