@@ -3,7 +3,7 @@ body {
   -moz-user-select: none
   -ms-user-select: none
   user-select: none
-  font: 10px Arial;
+  font: 10px "Arial Black";
 }
 
 .actions {
@@ -18,6 +18,21 @@ body {
 
 .axis line {
   stroke-opacity: 0.3;
+}
+
+.axis text {
+  font-family: "Arial Black";
+  text-transform: uppercase;
+  font-size: 10px
+}
+
+.x-axis line {
+  stroke-dasharray: 1, 2;
+  stroke-width: 1;
+}
+
+.x-axis .tick text {
+  text-anchor: end;
 }
 
 .line {
