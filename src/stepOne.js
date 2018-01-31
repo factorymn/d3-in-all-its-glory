@@ -50,22 +50,23 @@ export default function draw() {
 
   const xAxis = d3.axisBottom(x)
     .ticks((width + 2) / (height + 2) * 5)
-    .tickSize(-height)
+  .tickSize(-height - 6)
     .tickPadding(10);
 
   const yAxis = d3.axisRight(y)
     .ticks(5)
     .tickSize(7 + width)
-    .tickPadding( -15 - width);
+  .tickPadding(-15 - width)
+  .tickFormat(d => d + '%');
 
   svg.append('g')
-    .attr('class', 'axis y-axis')
-    .attr('transform', `translate(0,${ height })`)
+  .attr('class', 'axis x-axis')
+  .attr('transform', `translate(0,${ height + 6 })`)
     .call(xAxis);
 
   svg.append('g')
     .attr('transform', 'translate(-7, 0)')
-    .attr('class', 'axis x-axis')
+  .attr('class', 'axis y-axis')
     .call(yAxis);
 
   svg.append('g')

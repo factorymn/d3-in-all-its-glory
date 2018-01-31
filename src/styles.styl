@@ -1,9 +1,8 @@
 body {
-  -webkit-user-select: none
-  -moz-user-select: none
-  -ms-user-select: none
-  user-select: none
-  font: 10px "Arial Black";
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .actions {
@@ -16,23 +15,32 @@ body {
   display: none;
 }
 
-.axis line {
-  stroke-opacity: 0.3;
+.x-axis line {
+  stroke-opacity: 0.1;
+}
+
+.y-axis line {
+  stroke-opacity: 0.2;
 }
 
 .axis text {
-  font-family: "Arial Black";
+  font-family: Tahoma, Verdana, Geneva, sans-serif;
+  font-weight: bold;
   text-transform: uppercase;
   font-size: 10px
 }
 
-.x-axis line {
+.y-axis line {
   stroke-dasharray: 1, 2;
   stroke-width: 1;
 }
 
-.x-axis .tick text {
+.y-axis .tick text {
   text-anchor: end;
+}
+
+.x-axis .tick text {
+  font-size: 9px;
 }
 
 .line {
