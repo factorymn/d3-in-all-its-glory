@@ -53,18 +53,18 @@ export default function draw() {
 
   const xAxis = d3.axisBottom(x)
     .ticks((width + 2) / (height + 2) * 5)
-  .tickSize(-height - 6)
+    .tickSize(-height - 6)
     .tickPadding(10);
 
   const yAxis = d3.axisRight(y)
     .ticks(5)
-  .tickSize(7 + width)
-  .tickPadding(-15 - width)
-  .tickFormat(d => d + '%');
+    .tickSize(7 + width)
+    .tickPadding(-15 - width)
+    .tickFormat(d => d + '%');
 
   svg.append('g')
-  .attr('class', 'axis x-axis')
-  .attr('transform', `translate(0,${ height + 6 })`)
+    .attr('class', 'axis x-axis')
+    .attr('transform', `translate(0,${ height + 6 })`)
     .call(xAxis);
 
   svg.append('g')
@@ -78,22 +78,6 @@ export default function draw() {
 
   svg.append('g')
     .call(d3.axisLeft(y).ticks(0));
-
-  svg.append('text')
-    .attr('transform', `translate(${ width / 2 },${ height + margin.top + 20 })`)
-    .style('font-size', '12px')
-    .style('font-family', 'sans-serif')
-    .style('text-anchor', 'middle')
-    .text('Дата');
-
-  svg.append('text')
-    .attr('transform', 'rotate(-90)')
-    .attr('y', 0 - margin.left / 1.2)
-    .attr('x', 0 - (height / 2))
-    .attr('dy', '1em')
-    .style('font-size', '12px')
-    .style('text-anchor', 'middle')
-    .text('Процентная ставка');
 
   const nestByRegionId = d3.nest()
     .key(d => d.regionId)
@@ -121,8 +105,8 @@ export default function draw() {
 
   const lineGenerator = d3.line()
     .x(d => x(d.date))
-  .y(d => y(d.percent))
-  .curve(d3.curveCardinal);
+    .y(d => y(d.percent))
+    .curve(d3.curveCardinal);
 
   const legendContainer = d3.select('.legend');
 
