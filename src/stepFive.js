@@ -31,7 +31,7 @@ function chunkHelper(data, numberOfChunks) { // eslint-disable-line
   while (result.length < numberOfChunks) {
     const maxNumberOfElementsInChunk = Math.ceil(remainingToDistribute / (numberOfChunks - result.length));
     const currentlyDistributed = data.length - remainingToDistribute;
-    const currentChunk = data.slice(currentlyDistributed, (currentlyDistributed) + maxNumberOfElementsInChunk);
+    const currentChunk = data.slice(currentlyDistributed, currentlyDistributed + maxNumberOfElementsInChunk);
 
     result.push(currentChunk);
     remainingToDistribute = remainingToDistribute - currentChunk.length;

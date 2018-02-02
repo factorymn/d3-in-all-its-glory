@@ -65,9 +65,9 @@ body {
   stroke-opacity: 0.2;
 }
 
-//.legend {
-//  margin-top: 20px;
-//}
+.legend {
+  display: flex
+}
 
 .legend-item {
   cursor: pointer;
@@ -98,4 +98,18 @@ body {
 .dot {
   stroke-width: 1px;
   stroke: white;
+}
+
+.legend-item {
+  display: flex;
+
+  &.disabled {
+    opacity: .3
+  }
+}
+
+.legend-item-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
