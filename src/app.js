@@ -1,9 +1,9 @@
-import drawFunction from './stepTwo';
+import drawFunction from './stepSix';
 
 drawFunction();
 
-module.hot.accept('./stepTwo', () => { // eslint-disable-line no-undef
-  const newDrawFunction = require('./stepTwo').default;
+module.hot.accept('./stepSix', () => { // eslint-disable-line no-undef
+  const newDrawFunction = require('./stepSix').default;
 
   document.getElementsByClassName('legend')[0].innerHTML = '';
   document.getElementsByClassName('chart')[0].innerHTML = '';

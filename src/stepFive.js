@@ -42,8 +42,8 @@ function chunkHelper(data, numberOfChunks) { // eslint-disable-line
 
 export default function draw() {
   const margin = { top: 20, right: 20, bottom: 50, left: 50 };
-  const width = 750 - margin.left - margin.right;
-  const height = 415 - margin.top - margin.bottom;
+  const width = 920 - margin.left - margin.right;
+  const height = 390 - margin.top - margin.bottom;
 
   const x = d3.scaleTime()
     .range([0, width]);
