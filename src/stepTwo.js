@@ -81,8 +81,8 @@ export default function draw() {
     .call(xAxis);
 
   svg.append('g')
-  .attr('transform', 'translate(-7, 0)')
-  .attr('class', 'axis y-axis')
+    .attr('transform', 'translate(-7, 0)')
+    .attr('class', 'axis y-axis')
     .call(yAxis);
 
   svg.append('g')
@@ -125,24 +125,24 @@ export default function draw() {
   const chunkedRegionsIds = chunkHelper(regionsIds, 3);
 
   const legends = legendContainer.selectAll('div.legend-column')
-  .data(chunkedRegionsIds)
+    .data(chunkedRegionsIds)
+      .enter()
+    .append('div')
+    .attr('class', 'legend-column')
+    .selectAll('div.legend-item')
+    .data(d => d)
     .enter()
-  .append('div')
-  .attr('class', 'legend-column')
-  .selectAll('div.legend-item')
-  .data(d => d)
-  .enter()
-  .append('div')
-    .attr('class', 'legend-item')
-  .on('click', clickLegendHandler);
+    .append('div')
+      .attr('class', 'legend-item')
+    .on('click', clickLegendHandler);
 
   legends.append('div')
-  .attr('class', 'legend-item-color')
-  .style('background-color', regionId => colorScale(regionId));
+    .attr('class', 'legend-item-color')
+    .style('background-color', regionId => colorScale(regionId));
 
   legends.append('div')
-  .attr('class', 'legend-item-text')
-  .text(regionId => regionsNamesById[regionId]);
+    .attr('class', 'legend-item-text')
+    .text(regionId => regionsNamesById[regionId]);
 
   // const extraOptionsContainer = legendContainer.append('div')
   //   .attr('class', 'extra-options-container');

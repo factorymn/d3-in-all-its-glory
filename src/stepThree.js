@@ -19,9 +19,6 @@ d3.timeFormatDefaultLocale({
 
 const data = d3.csvParse(dataAsStringRu, d => d);
 
-const ENABLED_OPACITY = 1;
-const DISABLED_OPACITY = .2;
-
 function chunkHelper(data, numberOfChunks) { // eslint-disable-line
   const result = [];
   let remainingToDistribute = data.length;
@@ -141,62 +138,56 @@ export default function draw() {
     .curve(d3.curveCardinal);
 
   const legendContainer = d3.select('.legend');
+  const chunkedRegionsIds = chunkHelper(regionsIds, 3);
 
-  const legends = legendContainer
-    .append('svg')
-    .attr('width', 150)
-    .attr('height', 353)
-    .selectAll('g')
-    .data(regionsIds)
+  const legends = legendContainer.selectAll('div.legend-column')
+    .data(chunkedRegionsIds)
     .enter()
-    .append('g')
+    .append('div')
+    .attr('class', 'legend-column')
+    .selectAll('div.legend-item')
+    .data(d => d)
+    .enter()
+    .append('div')
     .attr('class', 'legend-item')
-    .attr('transform', (regionId, index) => `translate(0,${ index * 20 + 20 })`)
-    .on('click', clickLegendRectHandler);
+    .on('click', clickLegendHandler);
 
-  legends.append('rect')
-    .attr('x', 0)
-    .attr('y', 0)
-    .attr('width', 12)
-    .attr('height', 12)
-    .style('fill', regionId => colorScale(regionId))
-    .select(function() { return this.parentNode; })
-    .append('text')
-    .attr('x', 20)
-    .attr('y', 10)
-    .text(regionId => regionsNamesById[regionId])
-    .attr('class', 'textselected')
-    .style('text-anchor', 'start')
-    .style('font-size', 12);
+  legends.append('div')
+    .attr('class', 'legend-item-color')
+    .style('background-color', regionId => colorScale(regionId));
 
-  const extraOptionsContainer = legendContainer.append('div')
-    .attr('class', 'extra-options-container');
+  legends.append('div')
+    .attr('class', 'legend-item-text')
+    .text(regionId => regionsNamesById[regionId]);
 
-  extraOptionsContainer.append('div')
-    .attr('class', 'hide-all-option')
-    .text('скрыть все')
-    .on('click', () => {
-      regionsIds.forEach(regionId => {
-        regions[regionId].enabled = false;
-      });
-
-      singleLineSelected = false;
-
-      redrawChart();
-    });
-
-  extraOptionsContainer.append('div')
-    .attr('class', 'show-all-option')
-    .text('показать все')
-    .on('click', () => {
-      regionsIds.forEach(regionId => {
-        regions[regionId].enabled = true;
-      });
-
-      singleLineSelected = false;
-
-      redrawChart();
-    });
+  // const extraOptionsContainer = legendContainer.append('div')
+  //   .attr('class', 'extra-options-container');
+  //
+  // extraOptionsContainer.append('div')
+  //   .attr('class', 'hide-all-option')
+  //   .text('скрыть все')
+  //   .on('click', () => {
+  //     regionsIds.forEach(regionId => {
+  //       regions[regionId].enabled = false;
+  //     });
+  //
+  //     singleLineSelected = false;
+  //
+  //     redrawChart();
+  //   });
+  //
+  // extraOptionsContainer.append('div')
+  //   .attr('class', 'show-all-option')
+  //   .text('показать все')
+  //   .on('click', () => {
+  //     regionsIds.forEach(regionId => {
+  //       regions[regionId].enabled = true;
+  //     });
+  //
+  //     singleLineSelected = false;
+  //
+  //     redrawChart();
+  //   });
 
   const linesContainer = svg.append('g');
 
@@ -240,9 +231,9 @@ export default function draw() {
       .style('stroke', regionId => colorScale(regionId));
 
     legends.each(function(regionId) {
-      const opacityValue = enabledRegionsIds.indexOf(regionId) >= 0 ? ENABLED_OPACITY : DISABLED_OPACITY;
+      const isEnabledRegion = enabledRegionsIds.indexOf(regionId) >= 0;
 
-      d3.select(this).attr('opacity', opacityValue);
+      d3.select(this).classed('disabled', !isEnabledRegion);
     });
 
     const filteredData = data.filter(dataItem => enabledRegionsIds.indexOf(dataItem.regionId) >= 0);
@@ -262,7 +253,7 @@ export default function draw() {
       .on('click', voronoiClick);
   }
 
-  function clickLegendRectHandler(regionId) {
+  function clickLegendHandler(regionId) {
     if (singleLineSelected) {
       const newEnabledRegions = singleLineSelected === regionId ? [] : [singleLineSelected, regionId];
 
