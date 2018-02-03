@@ -39,7 +39,7 @@ export default function draw() {
     .append('g')
     .attr('transform', `translate(${ margin.left },${ margin.top })`);
 
-  data.forEach(function (d) {
+  data.forEach(d => {
     d.date = new Date(d.date);
     d.percent = +d.percent;
   });
@@ -85,7 +85,7 @@ export default function draw() {
 
   d3.map(data, d => d.regionId)
     .keys()
-    .forEach(function (d, i) {
+    .forEach((d, i) => {
       regions[d] = nestByRegionId[i].values;
     });
 

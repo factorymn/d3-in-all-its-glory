@@ -13,7 +13,7 @@ d3.timeFormatDefaultLocale({
   'periods': ['AM', 'PM'],
   'days': ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
   'shortDays': ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
-  'months': ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
+  'months': ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
   'shortMonths': ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 });
 
@@ -55,13 +55,13 @@ export default function draw() {
     .append('g')
     .attr('transform', `translate(${ margin.left },${ margin.top })`);
 
-  data.forEach(function (d) {
+  data.forEach(d => {
     d.date = new Date(d.date);
     d.percent = +d.percent;
   });
 
   x.domain(d3.extent(data, d => d.date));
-  y.domain(d3.extent(data, d => d.percent));
+  y.domain([0, d3.max(data, d => d.percent)]);
   colorScale.domain(d3.map(data, d => d.regionId).keys());
 
   const xAxis = d3.axisBottom(x)
@@ -92,22 +92,6 @@ export default function draw() {
   svg.append('g')
     .call(d3.axisLeft(y).ticks(0));
 
-  svg.append('text')
-    .attr('transform', `translate(${ width / 2 },${ height + margin.top + 20 })`)
-    .style('font-size', '12px')
-    .style('font-family', 'sans-serif')
-    .style('text-anchor', 'middle')
-    .text('Дата');
-
-  svg.append('text')
-    .attr('transform', 'rotate(-90)')
-    .attr('y', 0 - margin.left / 1.2)
-    .attr('x', 0 - (height / 2))
-    .attr('dy', '1em')
-    .style('font-size', '12px')
-    .style('text-anchor', 'middle')
-    .text('Процентная ставка');
-
   const nestByRegionId = d3.nest()
     .key(d => d.regionId)
     .sortKeys((v1, v2) => (parseInt(v1, 10) > parseInt(v2, 10) ? 1 : -1))
@@ -123,7 +107,7 @@ export default function draw() {
 
   d3.map(data, d => d.regionId)
     .keys()
-    .forEach(function (d, i) {
+    .forEach((d, i) => {
       regions[d] = {
         data: nestByRegionId[i].values,
         enabled: true
@@ -160,34 +144,29 @@ export default function draw() {
     .attr('class', 'legend-item-text')
     .text(regionId => regionsNamesById[regionId]);
 
-  // const extraOptionsContainer = legendContainer.append('div')
-  //   .attr('class', 'extra-options-container');
-  //
-  // extraOptionsContainer.append('div')
-  //   .attr('class', 'hide-all-option')
-  //   .text('скрыть все')
-  //   .on('click', () => {
-  //     regionsIds.forEach(regionId => {
-  //       regions[regionId].enabled = false;
-  //     });
-  //
-  //     singleLineSelected = false;
-  //
-  //     redrawChart();
-  //   });
-  //
-  // extraOptionsContainer.append('div')
-  //   .attr('class', 'show-all-option')
-  //   .text('показать все')
-  //   .on('click', () => {
-  //     regionsIds.forEach(regionId => {
-  //       regions[regionId].enabled = true;
-  //     });
-  //
-  //     singleLineSelected = false;
-  //
-  //     redrawChart();
-  //   });
+  const extraOptionsContainer = d3.select('.extra-options-container');
+
+  extraOptionsContainer.append('span')
+    .attr('class', 'hide-all-option')
+    .text('Скрыть все')
+    .on('click', () => {
+      regionsIds.forEach(regionId => {
+        regions[regionId].enabled = false;
+      });
+
+      redrawChart();
+    });
+
+  extraOptionsContainer.append('span')
+    .attr('class', 'show-all-option')
+    .text('Показать все')
+    .on('click', () => {
+      regionsIds.forEach(regionId => {
+        regions[regionId].enabled = true;
+      });
+
+      redrawChart();
+    });
 
   const linesContainer = svg.append('g');
 

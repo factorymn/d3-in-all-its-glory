@@ -17,8 +17,6 @@ d3.timeFormatDefaultLocale({
   'shortMonths': ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 });
 
-const data = d3.csvParse(dataAsStringRu, d => d);
-
 function chunkHelper(data, numberOfChunks) {
   const result = [];
   let remainingToDistribute = data.length;
@@ -34,6 +32,8 @@ function chunkHelper(data, numberOfChunks) {
 
   return result;
 }
+
+const data = d3.csvParse(dataAsStringRu, d => d);
 
 export default function draw() {
   const margin = { top: 20, right: 20, bottom: 50, left: 50 };
@@ -55,7 +55,7 @@ export default function draw() {
     .append('g')
     .attr('transform', `translate(${ margin.left },${ margin.top })`);
 
-  data.forEach(function (d) {
+  data.forEach(d => {
     d.date = new Date(d.date);
     d.percent = +d.percent;
   });
@@ -103,13 +103,11 @@ export default function draw() {
     regionsNamesById[item.key] = item.values[0].regionName;
   });
 
-  console.log(regionsNamesById);
-
   const regions = {};
 
   d3.map(data, d => d.regionId)
     .keys()
-    .forEach(function (d, i) {
+    .forEach((d, i) => {
       regions[d] = {
         data: nestByRegionId[i].values,
         enabled: true
