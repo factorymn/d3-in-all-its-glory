@@ -2,10 +2,6 @@ import * as d3 from 'd3';
 import 'styles.styl';
 import dataAsStringRu from 'rudata';
 
-/*
- SHOW VALUE
- */
-
 d3.timeFormatDefaultLocale({
   'dateTime': '%A, %e %B %Y г. %X',
   'date': '%d.%m.%Y',
