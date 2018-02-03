@@ -13,7 +13,7 @@ d3.timeFormatDefaultLocale({
   'periods': ['AM', 'PM'],
   'days': ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
   'shortDays': ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
-  'months': ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
+  'months': ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
   'shortMonths': ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 });
 
@@ -61,7 +61,7 @@ export default function draw() {
   });
 
   x.domain(d3.extent(data, d => d.date));
-  y.domain(d3.extent(data, d => d.percent));
+  y.domain([0, d3.max(data, d => d.percent)]);
   colorScale.domain(d3.map(data, d => d.regionId).keys());
 
   const xAxis = d3.axisBottom(x)
@@ -103,6 +103,8 @@ export default function draw() {
     regionsNamesById[item.key] = item.values[0].regionName;
   });
 
+  console.log(regionsNamesById);
+
   const regions = {};
 
   d3.map(data, d => d.regionId)
@@ -126,14 +128,14 @@ export default function draw() {
 
   const legends = legendContainer.selectAll('div.legend-column')
     .data(chunkedRegionsIds)
-      .enter()
+    .enter()
     .append('div')
     .attr('class', 'legend-column')
     .selectAll('div.legend-item')
     .data(d => d)
     .enter()
     .append('div')
-      .attr('class', 'legend-item')
+    .attr('class', 'legend-item')
     .on('click', clickLegendHandler);
 
   legends.append('div')
@@ -144,30 +146,29 @@ export default function draw() {
     .attr('class', 'legend-item-text')
     .text(regionId => regionsNamesById[regionId]);
 
-  // const extraOptionsContainer = legendContainer.append('div')
-  //   .attr('class', 'extra-options-container');
-  //
-  // extraOptionsContainer.append('div')
-  //   .attr('class', 'hide-all-option')
-  //   .text('скрыть все')
-  //   .on('click', () => {
-  //     regionsIds.forEach(regionId => {
-  //       regions[regionId].enabled = false;
-  //     });
-  //
-  //     redrawChart();
-  //   });
-  //
-  // extraOptionsContainer.append('div')
-  //   .attr('class', 'show-all-option')
-  //   .text('показать все')
-  //   .on('click', () => {
-  //     regionsIds.forEach(regionId => {
-  //       regions[regionId].enabled = true;
-  //     });
-  //
-  //     redrawChart();
-  //   });
+  const extraOptionsContainer = d3.select('.extra-options-container');
+
+  extraOptionsContainer.append('span')
+    .attr('class', 'hide-all-option')
+    .text('Скрыть все')
+    .on('click', () => {
+      regionsIds.forEach(regionId => {
+        regions[regionId].enabled = false;
+      });
+
+      redrawChart();
+    });
+
+  extraOptionsContainer.append('span')
+    .attr('class', 'show-all-option')
+    .text('Показать все')
+    .on('click', () => {
+      regionsIds.forEach(regionId => {
+        regions[regionId].enabled = true;
+      });
+
+      redrawChart();
+    });
 
   function redrawChart() {
     const enabledRegionsIds = regionsIds.filter(regionId => regions[regionId].enabled);

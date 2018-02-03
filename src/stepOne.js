@@ -13,7 +13,7 @@ d3.timeFormatDefaultLocale({
   'periods': ['AM', 'PM'],
   'days': ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'],
   'shortDays': ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'],
-  'months': ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'],
+  'months': ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
   'shortMonths': ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 });
 
@@ -45,28 +45,28 @@ export default function draw() {
   });
 
   x.domain(d3.extent(data, d => d.date));
-  y.domain(d3.extent(data, d => d.percent));
+  y.domain([0, d3.max(data, d => d.percent)]);
   colorScale.domain(d3.map(data, d => d.regionId).keys());
 
   const xAxis = d3.axisBottom(x)
     .ticks((width + 2) / (height + 2) * 5)
-  .tickSize(-height - 6)
+    .tickSize(-height - 6)
     .tickPadding(10);
 
   const yAxis = d3.axisRight(y)
     .ticks(5)
     .tickSize(7 + width)
-  .tickPadding(-15 - width)
-  .tickFormat(d => d + '%');
+    .tickPadding(-15 - width)
+    .tickFormat(d => d + '%');
 
   svg.append('g')
-  .attr('class', 'axis x-axis')
-  .attr('transform', `translate(0,${ height + 6 })`)
+    .attr('class', 'axis x-axis')
+    .attr('transform', `translate(0,${ height + 6 })`)
     .call(xAxis);
 
   svg.append('g')
     .attr('transform', 'translate(-7, 0)')
-  .attr('class', 'axis y-axis')
+    .attr('class', 'axis y-axis')
     .call(yAxis);
 
   svg.append('g')
