@@ -7,6 +7,10 @@ body {
   font-size: 12px;
 }
 
+.root {
+  margin-left: 20px;
+}
+
 .actions {
   display: flex;
   width: 900px;
@@ -75,9 +79,11 @@ body {
   font-size: 0;
   white-space: nowrap;
   margin-left: 50px;
+  margin-top: 25px;
 }
 
 .legend-column {
+  position: relative;
   width: 322px;
   display: inline-block;
   vertical-align: middle;
@@ -89,7 +95,8 @@ body {
   font-size: 12px;
   letter-spacing: 0.3px;
   font-weight: bold;
-  cursor: pointer
+  cursor: pointer;
+  position: relative;
 
   &.disabled {
     opacity: .3;
@@ -98,6 +105,21 @@ body {
 
 .legend-item-text {
   line-height: 20px;
+}
+
+.legend-value {
+  position: absolute;
+  left: -65px;
+  font-weight: normal;
+  top: 3px;
+}
+
+.legend-date {
+  position: absolute;
+  top: -22px;
+  left: -65px;
+  font-size: 10px;
+  letter-spacing: 0.3px;
 }
 
 .legend-item-color {
