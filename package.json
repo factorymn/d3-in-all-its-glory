@@ -92,10 +92,5 @@
     "webpack-hot-middleware": "^2.18.0",
     "webpack-manifest-plugin": "^1.0.1",
     "webpack-vendor-chunk-plugin": "^1.0.0"
-  },
-  "config": {
-    "ghooks": {
-      "pre-commit": "eslint ./src --quiet"
-    }
   }
 }
