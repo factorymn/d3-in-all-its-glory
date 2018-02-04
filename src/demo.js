@@ -95,8 +95,6 @@ function draw(data) {
     regionsNamesById[item.key] = item.values[0].regionName;
   });
 
-  console.log(regionsNamesById);
-
   const regions = {};
 
   d3.map(data, d => d.regionId)
@@ -162,10 +160,32 @@ function draw(data) {
       redrawChart();
     });
 
-  function redrawChart() {
-    const enabledRegionsIds = regionsIds.filter(regionId => regions[regionId].enabled);
+  const linesContainer = svg.append('g');
 
-    const paths = svg
+  let singleLineSelected = false;
+
+  const voronoi = d3.voronoi()
+    .x(d => x(d.date))
+    .y(d => y(d.percent))
+    .extent([[0, 0], [width, height]]);
+
+  const voronoiGroup = svg.append('g')
+    .attr('class', 'voronoi-parent')
+    .append('g')
+    .attr('class', 'voronoi');
+
+  d3.select('#show-voronoi')
+    .property('disabled', false)
+    .on('change', function () {
+      voronoiGroup.classed('voronoi-show', this.checked);
+    });
+
+  redrawChart();
+
+  function redrawChart(showingRegionsIds) {
+    const enabledRegionsIds = showingRegionsIds || regionsIds.filter(regionId => regions[regionId].enabled);
+
+    const paths = linesContainer
       .selectAll('.line')
       .data(enabledRegionsIds);
 
@@ -186,13 +206,59 @@ function draw(data) {
 
       d3.select(this).classed('disabled', !isEnabledRegion);
     });
+
+    const filteredData = data.filter(dataItem => enabledRegionsIds.indexOf(dataItem.regionId) >= 0);
+
+    const voronoiPaths = voronoiGroup.selectAll('path')
+      .data(voronoi.polygons(filteredData));
+
+    voronoiPaths.exit().remove();
+
+    voronoiPaths
+      .enter()
+      .append('path')
+      .merge(voronoiPaths)
+      .attr('d', d => (d ? `M${ d.join('L') }Z` : null))
+      .on('mouseover', voronoiMouseover)
+      .on('mouseout', voronoiMouseout)
+      .on('click', voronoiClick);
   }
 
-  redrawChart();
-
   function clickLegendHandler(regionId) {
-    regions[regionId].enabled = !regions[regionId].enabled;
+    if (singleLineSelected) {
+      const newEnabledRegions = singleLineSelected === regionId ? [] : [singleLineSelected, regionId];
+
+      regionsIds.forEach(currentRegionId => {
+        regions[currentRegionId].enabled = newEnabledRegions.indexOf(currentRegionId) >= 0;
+      });
+    } else {
+      regions[regionId].enabled = !regions[regionId].enabled;
+    }
+
+    singleLineSelected = false;
 
     redrawChart();
+  }
+
+  function voronoiMouseover(d) {
+    d3.select(`#region-${ d.data.regionId }`).classed('region-hover', true);
+  }
+
+  function voronoiMouseout(d) {
+    d3.select(`#region-${ d.data.regionId }`).classed('region-hover', false);
+  }
+
+  function voronoiClick(d) {
+    if (singleLineSelected) {
+      singleLineSelected = false;
+
+      redrawChart();
+    } else {
+      const regionId = d.data.regionId;
+
+      singleLineSelected = regionId;
+
+      redrawChart([regionId]);
+    }
   }
 }
