@@ -9,6 +9,8 @@ d3.timeFormatDefaultLocale({
   'shortMonths': ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 });
 
+const timeFormatter = d3.timeFormat('%d-%m-%Y');
+
 function chunkHelper(data, numberOfChunks) {
   const result = [];
   let remainingToDistribute = data.length;
@@ -113,6 +115,20 @@ function draw(data) {
     .y(d => y(d.percent))
     .curve(d3.curveCardinal);
 
+  const nestByDate = d3.nest()
+    .key(d => d.date)
+    .entries(data);
+
+  const percentsByDate = {};
+
+  nestByDate.forEach(dateItem => {
+    percentsByDate[dateItem.key] = {};
+
+    dateItem.values.forEach(item => {
+      percentsByDate[dateItem.key][item.regionId] = item.percent;
+    });
+  });
+
   const legendContainer = d3.select('.legend');
   const chunkedRegionsIds = chunkHelper(regionsIds, 3);
 
@@ -135,6 +151,13 @@ function draw(data) {
   legends.append('div')
     .attr('class', 'legend-item-text')
     .text(regionId => regionsNamesById[regionId]);
+
+  const legendsValues = legends.append('div')
+    .attr('class', 'legend-value');
+
+  const legendsDate = d3.selectAll('.legend-column')
+    .append('div')
+    .attr('class', 'legend-date');
 
   const extraOptionsContainer = d3.select('.extra-options-container');
 
@@ -169,10 +192,24 @@ function draw(data) {
     .y(d => y(d.percent))
     .extent([[0, 0], [width, height]]);
 
-  const voronoiGroup = svg.append('g')
+  const hoverDot = svg.append('circle')
+    .attr('class', 'dot')
+    .attr('r', 3)
+    .style('visibility', 'hidden');
+
+  let voronoiGroup = svg.append('g')
     .attr('class', 'voronoi-parent')
     .append('g')
-    .attr('class', 'voronoi');
+    .attr('class', 'voronoi')
+    .on('mouseover', () => {
+      legendsDate.style('visibility', 'visible');
+      hoverDot.style('visibility', 'visible');
+    })
+    .on('mouseout', () => {
+      legendsValues.text('');
+      legendsDate.style('visibility', 'hidden');
+      hoverDot.style('visibility', 'hidden');
+    });
 
   d3.select('#show-voronoi')
     .property('disabled', false)
@@ -241,7 +278,19 @@ function draw(data) {
   }
 
   function voronoiMouseover(d) {
+    legendsDate.text(timeFormatter(d.data.date));
+
+    legendsValues.text(dataItem => {
+      const value = percentsByDate[d.data.date][dataItem];
+
+      return value ? value + '%' : 'Н/Д';
+    });
+
     d3.select(`#region-${ d.data.regionId }`).classed('region-hover', true);
+
+    hoverDot
+      .attr('cx', () => x(d.data.date))
+      .attr('cy', () => y(d.data.percent));
   }
 
   function voronoiMouseout(d) {
