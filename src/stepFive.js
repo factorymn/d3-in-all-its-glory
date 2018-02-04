@@ -13,11 +13,9 @@ d3.timeFormatDefaultLocale({
   'shortMonths': ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 });
 
-const data = d3.csvParse(dataAsStringRu, d => d);
-
 const timeFormatter = d3.timeFormat('%d-%m-%Y');
 
-function chunkHelper(data, numberOfChunks) { // eslint-disable-line
+function chunkHelper(data, numberOfChunks) {
   const result = [];
   let remainingToDistribute = data.length;
 
@@ -32,6 +30,8 @@ function chunkHelper(data, numberOfChunks) { // eslint-disable-line
 
   return result;
 }
+
+const data = d3.csvParse(dataAsStringRu, d => d);
 
 export default function draw() {
   const margin = { top: 20, right: 20, bottom: 50, left: 50 };

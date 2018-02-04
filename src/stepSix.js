@@ -15,7 +15,7 @@ d3.timeFormatDefaultLocale({
 
 const timeFormatter = d3.timeFormat('%d-%m-%Y');
 
-function chunkHelper(data, numberOfChunks) { // eslint-disable-line
+function chunkHelper(data, numberOfChunks) {
   const result = [];
   let remainingToDistribute = data.length;
 
