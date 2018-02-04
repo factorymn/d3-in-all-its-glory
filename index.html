@@ -8,14 +8,21 @@
   <title>App name</title>
 </head>
 <body>
-<div class="actions">
-  <label id="form" for="show-voronoi">
-    Показать разбиение Вороного
-    <input type="checkbox" id="show-voronoi" disabled>
-  </label>
-  <button class="reset-zoom-button">Сбросить зум</button>
-</div>
 <div class="root">
+  <div class="header">
+    <h2 class="title">
+      Динамика средневзвешенных процентных ставок по кредитам, предоставленным юридическим и
+      физическим лицам, предприятиям и организациям в валюте РФ для регионов Центального Федерального Округа
+    </h2>
+    <div class="preview"></div>
+  </div>
+  <div class="actions">
+    <label id="form" for="show-voronoi">
+      Показать разбиение Вороного
+      <input type="checkbox" id="show-voronoi" disabled>
+    </label>
+    <button class="reset-zoom-button">Сбросить зум</button>
+  </div>
   <div class="chart"></div>
   <div class="legend"></div>
   <div class="extra-options-container"></div>

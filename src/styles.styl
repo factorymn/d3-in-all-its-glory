@@ -9,10 +9,36 @@ body {
 
 .root {
   margin-left: 20px;
+  padding-bottom: 20px;
+}
+
+.header {
+  display: flex;
+  width: 900px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px rgba(0,0,0,.1) solid;
+}
+
+.title {
+  padding-right: 40px;
+  text-align: justify;
+  margin: 0;
+}
+
+.preview {
+  position: relative;
+}
+
+.preview-rect {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 .actions {
   display: flex;
+  margin-bottom: 10px;
   width: 900px;
   justify-content: space-between;
 }
@@ -47,6 +73,14 @@ body {
 
 .x-axis .tick text {
   font-size: 9px;
+}
+
+.preview-axis.x-axis .tick:nth-child(2) text {
+  text-anchor: start;
+}
+
+.preview-axis.x-axis .tick:nth-child(3) text {
+  text-anchor: end;
 }
 
 .line {
