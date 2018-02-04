@@ -40,7 +40,20 @@ function draw(data) {
   const y = d3.scaleLinear()
     .range([height, 0]);
 
+  let rescaledX = x;
+  let rescaledY = y;
+
   const colorScale = d3.scaleOrdinal(d3.schemeCategory20);
+
+  const zoom = d3.zoom()
+    .scaleExtent([0.95, 10])
+    .translateExtent([[-100000, -100000], [100000, 100000]])
+    .on('start', () => {
+      hoverDot
+        .attr('cx', -5)
+        .attr('cy', 0);
+    })
+    .on('zoom', zoomed);
 
   const svg = d3.select('.chart')
     .append('svg')
@@ -69,12 +82,12 @@ function draw(data) {
     .tickPadding(-15 - width)
     .tickFormat(d => d + '%');
 
-  svg.append('g')
+  const xAxisElement = svg.append('g')
     .attr('class', 'axis x-axis')
     .attr('transform', `translate(0,${ height + 6 })`)
     .call(xAxis);
 
-  svg.append('g')
+  const yAxisElement = svg.append('g')
     .attr('transform', 'translate(-7, 0)')
     .attr('class', 'axis y-axis')
     .call(yAxis);
@@ -85,6 +98,12 @@ function draw(data) {
 
   svg.append('g')
     .call(d3.axisLeft(y).ticks(0));
+
+  svg.append('defs').append('clipPath')
+    .attr('id', 'clip')
+    .append('rect')
+    .attr('width', width)
+    .attr('height', height);
 
   const nestByRegionId = d3.nest()
     .key(d => d.regionId)
@@ -111,7 +130,7 @@ function draw(data) {
   const regionsIds = Object.keys(regions);
 
   const lineGenerator = d3.line()
-    .x(d => x(d.date))
+    .x(d => rescaledX(d.date))
     .y(d => y(d.percent))
     .curve(d3.curveCardinal);
 
@@ -183,7 +202,8 @@ function draw(data) {
       redrawChart();
     });
 
-  const linesContainer = svg.append('g');
+  const linesContainer = svg.append('g')
+    .attr('clip-path', 'url(#clip)');
 
   let singleLineSelected = false;
 
@@ -195,10 +215,12 @@ function draw(data) {
   const hoverDot = svg.append('circle')
     .attr('class', 'dot')
     .attr('r', 3)
+    .attr('clip-path', 'url(#clip)')
     .style('visibility', 'hidden');
 
   let voronoiGroup = svg.append('g')
     .attr('class', 'voronoi-parent')
+    .attr('clip-path', 'url(#clip)')
     .append('g')
     .attr('class', 'voronoi')
     .on('mouseover', () => {
@@ -210,6 +232,17 @@ function draw(data) {
       legendsDate.style('visibility', 'hidden');
       hoverDot.style('visibility', 'hidden');
     });
+
+  d3.select('.voronoi-parent').call(zoom);
+
+  d3.select('.reset-zoom-button').on('click', () => {
+    rescaledX = x;
+    rescaledY = y;
+
+    d3.select('.voronoi-parent').transition()
+      .duration(750)
+      .call(zoom.transform, d3.zoomIdentity);
+  });
 
   d3.select('#show-voronoi')
     .property('disabled', false)
@@ -289,8 +322,8 @@ function draw(data) {
     d3.select(`#region-${ d.data.regionId }`).classed('region-hover', true);
 
     hoverDot
-      .attr('cx', () => x(d.data.date))
-      .attr('cy', () => y(d.data.percent));
+      .attr('cx', () => rescaledX(d.data.date))
+      .attr('cy', () => rescaledY(d.data.percent));
   }
 
   function voronoiMouseout(d) {
@@ -309,5 +342,26 @@ function draw(data) {
 
       redrawChart([regionId]);
     }
+  }
+
+  function zoomed() {
+    const transformation = d3.event.transform;
+
+    rescaledX = transformation.rescaleX(x);
+    rescaledY = transformation.rescaleY(y);
+
+    xAxisElement.call(xAxis.scale(transformation.rescaleX(x)));
+    yAxisElement.call(yAxis.scale(d3.event.transform.rescaleY(y)));
+
+    linesContainer.selectAll('path')
+      .attr('d', regionId => {
+        return d3.line()
+          .x(d => rescaledX(d.date))
+          .y(d => rescaledY(d.percent))
+          .curve(d3.curveCardinal)(regions[regionId].data);
+      });
+
+    voronoiGroup
+      .attr('transform', transformation);
   }
 }
