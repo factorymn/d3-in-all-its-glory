@@ -3,7 +3,8 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  font-family: Tahoma, Verdana, Geneva, sans-serif;
+  font-family: Montserrat, sans-serif;
+  font-wight: 500;
   font-size: 12px;
 }
 
@@ -14,7 +15,7 @@ body {
 
 .header {
   display: flex;
-  width: 900px;
+  width: 910px;
   padding-bottom: 10px;
   margin-bottom: 10px;
   border-bottom: 1px rgba(0,0,0,.1) solid;
@@ -22,8 +23,12 @@ body {
 
 .title {
   padding-right: 40px;
-  text-align: justify;
   margin: 0;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 25px;
+  margin-top: 3px;
+  width: 658px;
 }
 
 .preview {
@@ -59,7 +64,7 @@ body {
   font-family: Tahoma, Verdana, Geneva, sans-serif;
   font-weight: bold;
   text-transform: uppercase;
-  font-size: 10px
+  font-size: 10px;
 }
 
 .y-axis line {
@@ -71,8 +76,8 @@ body {
   text-anchor: end;
 }
 
-.x-axis .tick text {
-  font-size: 9px;
+text, button {
+  font-family: Montserrat, sans-serif;
 }
 
 .preview-axis.x-axis .tick:nth-child(2) text {
@@ -128,7 +133,6 @@ body {
   margin-bottom: 12px;
   font-size: 12px;
   letter-spacing: 0.3px;
-  font-weight: bold;
   cursor: pointer;
   position: relative;
 
@@ -166,7 +170,6 @@ body {
 .extra-options-container {
   font-size: 12px;
   letter-spacing: 0.3px;
-  font-weight: bold;
   width: 900px;
   margin-top: 10px;
 }

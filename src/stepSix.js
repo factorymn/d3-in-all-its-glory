@@ -280,8 +280,8 @@ export default function draw() {
 
   const preview = d3.select('.preview')
     .append('svg')
-    .style('width', previewWidth + previewMargin.left + previewMargin.right)
-    .style('height', previewHeight + previewMargin.top + previewMargin.bottom)
+    .attr('width', previewWidth + previewMargin.left + previewMargin.right)
+    .attr('height', previewHeight + previewMargin.top + previewMargin.bottom)
     .append('g')
     .attr('transform', `translate(${ previewMargin.left },${ previewMargin.top })`);
 
