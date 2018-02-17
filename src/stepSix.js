@@ -437,12 +437,14 @@ export default function draw() {
       .style('stroke', regionId => colorScale(regionId));
 
     hoverDot
-      .attr('cx', () => transform.applyX(x(d.data.date)))
-      .attr('cy', () => transform.applyY(y(d.data.percent)));
+      .attr('cx', () => rescaledX(d.data.date))
+      .attr('cy', () => rescaledY(d.data.percent));
   }
 
   function voronoiMouseout(d) {
-    d3.select(`#region-${ d.data.regionId }`).classed('region-hover', false);
+    if (d) {
+      d3.select(`#region-${ d.data.regionId }`).classed('region-hover', false);
+    }
   }
 
   function voronoiClick(d) {

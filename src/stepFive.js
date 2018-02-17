@@ -135,7 +135,7 @@ export default function draw() {
 
   const lineGenerator = d3.line()
     .x(d => rescaledX(d.date))
-    .y(d => y(d.percent))
+    .y(d => rescaledY(d.percent))
     .curve(d3.curveCardinal);
 
   const nestByDate = d3.nest()
@@ -331,7 +331,9 @@ export default function draw() {
   }
 
   function voronoiMouseout(d) {
-    d3.select(`#region-${ d.data.regionId }`).classed('region-hover', false);
+    if (d) {
+      d3.select(`#region-${ d.data.regionId }`).classed('region-hover', false);
+    }
   }
 
   function voronoiClick(d) {
@@ -354,12 +356,13 @@ export default function draw() {
     rescaledX = transformation.rescaleX(x);
     rescaledY = transformation.rescaleY(y);
 
-    xAxisElement.call(xAxis.scale(transformation.rescaleX(x)));
-    yAxisElement.call(yAxis.scale(d3.event.transform.rescaleY(y)));
+    xAxisElement.call(xAxis.scale(rescaledX));
+    yAxisElement.call(yAxis.scale(rescaledY));
 
     linesContainer.selectAll('path')
       .attr('d', regionId => {
         return d3.line()
+          .defined(d => d.percent !== 0)
           .x(d => rescaledX(d.date))
           .y(d => rescaledY(d.percent))
           .curve(d3.curveCardinal)(regions[regionId].data);
